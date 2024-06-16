@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Details</title>
+</head>
+<body>
+    <h1>Product Details</h1>
+    <p>Email: <span id="email"></span></p>
+    <p>Cost: <span id="cost"></span></p>
+    <p>Title: <span id="title"></span></p>
+    
+    
+    
+    <form id="submitForm" method="post" action="/submit">
+    <div>
+        <button onclick="decrement()">-</button>
+        <span id="number">0</span>
+        <button onclick="increment()">+</button>
+    </div>
+    
+    
+        <input type="hidden" id="numberInput" name="number">
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('email').innerText = '${email}';
+        document.getElementById('cost').innerText = '${cost}';
+        document.getElementById('title').innerText = '${title}';
+
+        let number = 0;
+        document.getElementById('number').innerText = number;
+
+        function increment() {
+            number++;
+            document.getElementById('number').innerText = number;
+        }
+
+        function decrement() {
+            if (number > 0) {
+                number--;
+                document.getElementById('number').innerText = number;
+            }
+        }
+
+        document.getElementById('submitForm').addEventListener('submit', function(event) {
+            document.getElementById('numberInput').value = number;
+        });
+    </script>
+</body>
+</html>

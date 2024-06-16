@@ -1,0 +1,33 @@
+{
+  "name": "hjsw-project",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@egjs/flicking": "^4.11.2",
+    "@egjs/vue-flicking": "^4.11.2",
+    "@egjs/vue3-flicking": "^4.11.2",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "axios": "^1.6.8",
+    "bootstrap-icons": "^1.11.3",
+    "cors": "^2.8.5",
+    "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
+    "vue": "^3.4.21",
+    "vue-cookies": "^1.8.4",
+    "vue-router": "^4.3.0",
+    "vue-session": "^1.0.0",
+    "vue3-cookies": "^1.0.6"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  }
+}

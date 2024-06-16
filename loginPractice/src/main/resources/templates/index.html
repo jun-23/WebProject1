@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>이미지 업로드</h1>
+
+<form th:action="@{/api/shop/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*">
+    <input type="text" name="item_name" >
+    <input type="text" name="cost" >
+    <br>
+    <button type="submit">업로드</button>
+</form>
+
+
+<a th:href="@{/api/shop/}">List로 가기</a>
+</body>
+</html>

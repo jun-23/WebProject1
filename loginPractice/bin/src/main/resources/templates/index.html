@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Hello OAuth 2.0 Main index</h1>
+	<a th:href="@{/oauth2/authorization/google}">Google Login</a>
+	<!-- Spring Security에서 제공하는 로그아웃 -->
+	<a href="/logout">log out</a>
+</body>
+</html>
