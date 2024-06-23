@@ -1,84 +1,64 @@
 <template>
   <div class="shop-container">
     <h2>상점</h2>
-    
+
+    <!-- 카테고리 선택 -->
+
+    <div class="category-buttons">
+      <button v-for="category in categories" 
+              :key="category" 
+              @click="selectCategory(category)"
+              :class="{ active: selectedCategory === category }">
+        {{ category }}
+      </button>
+    </div>
+
     <h4>상품 목록</h4>
     <hr />
     <p>현재 상품의 수: {{ store.shopList.length }}</p>
     <hr />
-    <table class="shopTable">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>이름</th>
-          <th>상품 이미지</th>
-          <th>가격</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in paginatedPosts" :key="product.id" @click="goDeatil(product.productId)">
-          <td>{{product.productId}}</td>        
-          <td>{{ product.item_name}}</td>
-          <td><img :src="product.img" class="img-box"></td>
-          <td>{{ Number(product.cost).toLocaleString() }} 원</td>       
-        </tr>
-      </tbody>
-    </table>
+    <div class="card-container">
+      <div class="card" v-for="product in store.shopList" :key="product.id" @click="goDetail(product.productId)">
+        <img :src="product.img" class="card-img" />
+        <div class="card-content">
+          <h5>{{ product.item_name }}</h5>
+          <p>가격: {{ Number(product.cost).toLocaleString() }} 원</p>
+        </div>
+      </div>
+    </div>
 
     <!-- 페이지네이션 -->
-  <div class="pagination">
-    <!-- 하단 버튼 구현 -->
-    <section class="btn-section">
-      <!-- 왼쪽으로 넘기기 -->
-      <button class="btn-cp" @click="prevPage" :disabled="currentPage === 1">
-        <i class="fab fa-lg first-logo fa-codepen"
-          ><font-awesome-icon icon="arrow-left"
-        /></i>
-        <i class="fab fa-lg second-logo fa-codepen"
-          ><font-awesome-icon icon="arrow-left"
-        /></i>
-      </button>
-      <!-- 각 페이지 넘버링 표시 -->
-      <span v-for="page in totalPages" :key="page">
-        <button
-          class="btn-cp"
-          @click="gotoPage(page)"
-          :class="{ active: currentPage === page }"
-        >
-          <i class="fab fa-lg first-logo fa-codepen">{{ page }}</i>
-          <i class="fab fa-lg second-logo fa-codepen">{{ page }}</i>
+    <div class="pagination">
+      <section class="btn-section">
+        <button class="btn-cp" @click="prevPage" :disabled="currentPage === 1">
+          <i class="fab fa-lg first-logo fa-codepen"><font-awesome-icon icon="arrow-left" /></i>
+          <i class="fab fa-lg second-logo fa-codepen"><font-awesome-icon icon="arrow-left" /></i>
         </button>
-      </span>
-      <!-- 다음 페이지로 넘어가기-->
-      <button
-        class="btn-cp"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        <i class="fab fa-lg first-logo fa-codepen"
-          ><font-awesome-icon icon="arrow-right"
-        /></i>
-        <i class="fab fa-lg second-logo fa-codepen"
-          ><font-awesome-icon icon="arrow-right"
-        /></i>
-      </button>
-    </section>
-  </div>
+        <span v-for="page in totalPages" :key="page">
+          <button class="btn-cp" @click="gotoPage(page)" :class="{ active: currentPage === page }">
+            <i class="fab fa-lg first-logo fa-codepen">{{ page }}</i>
+            <i class="fab fa-lg second-logo fa-codepen">{{ page }}</i>
+          </button>
+        </span>
+        <button class="btn-cp" @click="nextPage" :disabled="currentPage === totalPages">
+          <i class="fab fa-lg first-logo fa-codepen"><font-awesome-icon icon="arrow-right" /></i>
+          <i class="fab fa-lg second-logo fa-codepen"><font-awesome-icon icon="arrow-right" /></i>
+        </button>
+      </section>
+    </div>
   </div>
 </template>
 
-
 <script setup>
-///// for FontAwesome
+import { ref, onMounted,computed,onUpdated } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useShopStore } from '@/stores/shop';
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { fas } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 
 library.add(fas);
-
-import { useShopStore } from '@/stores/shop';
-import { ref, onMounted, computed} from 'vue';
-import { useRoute, useRouter } from "vue-router";
 
 const store = useShopStore();
 const router = useRouter();
@@ -86,49 +66,85 @@ const route = useRoute();
 
 const currentPage = ref(1);
 const shopPerPage = 10;
+const selectedCategory = ref('all');
+const categories = ref(['all', '컵', '디지털', '패션', '데스크', '인형', '키링']);
 
-onMounted(() =>{
-  store.getShopList();
+// 페이지 로드 시 카테고리에 따라 상품 목록 가져오기
+onMounted(() => {
+  console.log('통과');
+  selectedCategory.value = route.params.category || 'all'; // route.params.category가 없을 경우 'all'로 설정
+
+  if (selectedCategory.value === 'all') {
+    console.log(selectedCategory.value);
+    store.getShopList();
+  } else {
+    store.getShopListByCategory(selectedCategory.value);
+  }
+});
+
+onUpdated(() => {
 
 })
 
-const goDeatil = function(id){
-  router.push(`/shop/${id}`);
-}
 
-// 전체 게시글과 현재 페이지에 따른 게시글 목록 계산
+// 카테고리 변경 시 상품 목록 필터링
+const selectCategory = (category) => {
+  selectedCategory.value = category;
+  currentPage.value = 1;
+  if (selectedCategory.value === 'all') {
+    console.log(selectedCategory.value);
+    store.getShopList();
+  } else {
+    store.getShopListByCategory(selectedCategory.value);
+  }
+  router.push(`/shop/${category}`);
+
+
+  // computed 속성을 이용하여 filteredProducts를 다시 계산하도록 함
+};
+
+// 상세 페이지 이동
+const goDetail = (id) => {
+  router.push(`/shop/detail/${id}`);
+
+};
+
+// 필터된 상품 목록
+const filteredProducts = computed(() => {
+  if (selectedCategory.value === 'all') {
+    return store.shopList;
+  }
+  return store.shopList.filter(product => product.category === selectedCategory.value);
+});
+
+// 현재 페이지의 상품 목록 계산
 const paginatedPosts = computed(() => {
-const startIndex = (currentPage.value - 1) * shopPerPage;
-const endIndex = startIndex + shopPerPage;
-return store.shopList.slice(startIndex, endIndex);
+  const startIndex = (currentPage.value - 1) * shopPerPage;
+  const endIndex = startIndex + shopPerPage;
+  return filteredProducts.value.slice(startIndex, endIndex);
 });
 
 // 전체 페이지 수 계산
-const totalPages = computed(() =>
-Math.ceil(store.shopList.length / shopPerPage)
-);
+const totalPages = computed(() => Math.ceil(filteredProducts.value.length / shopPerPage));
 
-// 다음 페이지로 이동하는 함수
+// 다음 페이지 이동
 const nextPage = () => {
-if (currentPage.value < totalPages.value) {
-  currentPage.value++;
-}
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
 };
 
-// 이전 페이지로 이동하는 함수
+// 이전 페이지 이동
 const prevPage = () => {
-if (currentPage.value > 1) {
-  currentPage.value--;
-}
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
 };
 
-// 특정 페이지로 이동하는 함수
+// 특정 페이지로 이동
 const gotoPage = (page) => {
-currentPage.value = page;
+  currentPage.value = page;
 };
-
-
-
 </script>
 
 <style scoped>
@@ -138,171 +154,149 @@ currentPage.value = page;
   padding: 20px;
 }
 
-.shopTable {
+.category-buttons {
+  margin-bottom: 20px;
+}
+
+.category-buttons button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.category-buttons button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  border: 1px solid #f2f2f2;
+  border-radius: 10px;
+  padding: 20px;
+  width: calc(25% - 20px);
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  background-color: #f2f2f2;
+  transform: translateY(-5px);
+}
+
+.card-img {
   width: 100%;
-  border-collapse: collapse;
+  height: auto;
+  margin-bottom: 10px;
 }
 
-.shopTable th,
-.shopTable td {
-  text-align: center; /* 셀 텍스트 가운데 정렬 설정 */
+.card-content {
+  text-align: center;
 }
 
-.shopTable th {
-  background-color: #f2f2f2; /* 헤더 배경색 설정 */
-}
-.shopTable tbody tr {
-  transition: background-color 0.3s ease; /* 배경색 변화를 부드럽게 적용 */
-}
-.shopTable tbody tr:hover {
-  background-color: skyblue; /* 마우스 오버 시 행 배경색 설정 */
-  cursor: pointer; /* 마우스 오버 시 커서 모양 변경 */
+.card-content h5 {
+  margin-bottom: 10px;
+  font-size: 18px;
 }
 
-.shopTable td img {
-max-width: 100px;
-min-width: 100px;
-max-height: 100px;
+.card-content p {
+  margin: 5px 0;
 }
 
-.img-box{
-  max-width: 100%;
-}
-
-.img-box:hover{
-      content : url("https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2023/10/13/a0def03f-631c-4cfb-b1f7-ac725f8e5ef7.jpg");
-      
-}
-
-.detailLink {
-display: block;
-text-decoration: none;
-color: #333;
-}
-
-.detailLink:hover {
-color: red;
-transition-duration: 10s;
-}
-
-/* ------------- */
-/* Basic Setting */
-/* ------------- */
-
-*,
-*::before,
-*::after {
-box-sizing: inherit;
-}
-
-::selection {
-color: #fff;
-background-color: #f3feff;
-}
-
-/* Setting for Button*/
-:root {
-/* Font Color */
---light-theme: #f3feff;
-
-/* Font Family */
---fonts-style-x: "neuzeit-grotesk", sans-serif;
---fonts-style-y: "neuzeit-grotesk", sans-serif;
-
-/* Font Weight */
---light: 300;
---regular: 400;
---bold: 700;
---black: 900;
-}
-/* 페이지 버튼 */
 .pagination {
-margin-top: 20px;
+  margin-top: 20px;
 }
 
 .pagination button {
-background-color: #4caf50;
-color: white;
-padding: 8px 16px;
-border: none;
-cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
 }
 
 .pagination button.active {
-background-color: #007bff;
+  background-color: #007bff;
 }
 
 .pagination button:disabled {
-background-color: #cccccc;
-cursor: not-allowed;
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
-/* ------------- */
-/* Content Style */
-/* ------------- */
-
 .btn-section {
-display: flex;
+  display: flex;
 }
 
 .btn-section button {
-position: relative;
-width: 50px;
-height: 50px;
-margin: 0 10px;
-border-radius: 10px;
-border: none;
-outline: none;
-overflow: hidden;
-cursor: pointer;
-transition: 400ms;
-
-animation: zoom 500ms ease;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  margin: 0 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 400ms;
+  animation: zoom 500ms ease;
 }
 
 .btn-section button i {
-position: absolute;
-font-size: 1.5em;
-transition: 400ms;
+  position: absolute;
+  font-size: 1.5em;
+  transition: 400ms;
 }
 
 .btn-section .btn-cp {
-background-color: #ebfaf0bb;
-color: #1e4d94;
+  background-color: #ebfaf0bb;
+  color: #1e4d94;
 }
 
 .btn-section .first-logo {
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-opacity: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
 }
 
 .btn-section .second-logo {
-position: absolute;
-top: calc(50% + 30px);
-left: 50%;
-transform: translate(-50%, -50%);
-opacity: 0;
+  position: absolute;
+  top: calc(50% + 30px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
 }
 
 .btn-section button:hover .first-logo {
-position: absolute;
-top: -30px;
-opacity: 0;
+  position: absolute;
+  top: -30px;
+  opacity: 0;
 }
 
 .btn-section button:hover .second-logo {
-top: 50%;
-opacity: 1;
+  top: 50%;
+  opacity: 1;
 }
 
 .btn-section button:active {
-background-color: #ffffff00;
+  background-color: #ffffff00;
 }
-
-
 
 @keyframes zoom {
 }

@@ -91,29 +91,30 @@ onBeforeUnmount(() => {
     </div>
 
     <RouterView />
-    <div
-      v-if="showHeader && isChatVisible"
-      class="floating-chat"
-      :style="{
-        width: chatWidth + 'px',
-        height: chatHeight + 'px',
-        ...chatStyle,
-      }"
-    >
+    <!-- 봇 주석 -->
+     <!-- <div  --> 
+      <!-- v-if/="showHeader && isChatVisible" -->
+      <!-- class="floating-chat" -->
+      <!-- :style="{ -->
+        <!-- width: chatWidth + 'px', -->
+        <!-- height: chatHeight + 'px', -->
+        <!-- ...chatStyle, -->
+      <!-- }" -->
+    <!-- > -->
       <!-- Drag handle -->
-      <div class="drag-handle" @mousedown="startDrag"></div>
+      <!-- <div class="drag-handle" @mousedown="startDrag"></div> -->
 
       <!-- 크기 조절 핸들 -->
-      <div class="resize-handle" @mousedown="startResize"></div>
+      <!-- <div class="resize-handle" @mousedown="startResize"></div> -->
 
       <!-- 닫기 버튼 -->
-      <button class="close-button" @click="closeChat">닫기</button>
-      <GptView :width="chatWidth" :height="chatHeight"></GptView>
-    </div>
+      <!-- <button class="close-button" @click="closeChat">닫기</button> -->
+      <!-- <GptView :width="chatWidth" :height="chatHeight"></GptView> -->
+    <!-- </div> -->
 
-    <div class="footer">
-      <TheFooterNav v-if="showHeader"></TheFooterNav>
-    </div>
+    <!-- <div class="footer"> -->
+      <!-- <TheFooterNav v-if="showHeader"></TheFooterNav> -->
+    <!-- </div> -->
   </div>
 </template>
 

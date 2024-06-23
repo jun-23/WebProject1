@@ -1,29 +1,38 @@
 <template>
-  <div class="product-details">
+  <div class="product-details-container">
+    <div class="category-selection">
+      <div class="category-buttons">
+        <button v-for="category in categories" 
+                :key="category" 
+                @click="goToCategory(category)"
+                :class="{ active: selectedCategory === category }">
+          {{ category }}
+        </button>
+      </div>
+    </div>
+
+    <div class="product-details">
+      <div class="product-image">
+        <img :src="store.product.img" alt="">
+      </div>
       <div class="product-info">
-          <h4>상품명: {{ store.product.item_name}}</h4>
-          <div class="product-image">
-              <img :src="store.product.img" alt="">
-          </div>
-          <p>가격: {{ Number(store.product.cost * (count)).toLocaleString()}} 원</p>
-      </div>
-      
-      <div class="buttons">
-          <p>{{ count }} 개</p>
-
-      </div>
-      <div class="button-container">
-       <button>
-          <span class="button_top" @click="countUp"> Up </span>
-      </button>
-
-      <button>
-        <span class="button_top" @click="countDown"> Down </span>
-      </button>
-
-      <div>
-        <a v-if="!userExist" class="button" @click="login">결제</a>
-        <a v-if="userExist" class="button" :href="buyUrl">결제</a>
+        <h4>상품명: {{ store.product.item_name }}</h4>
+        <p>판매가: {{ Number(store.product.cost).toLocaleString() }} 원</p>
+        <p>수량: {{ count }} 개</p>
+        <div class="button-container">
+          <button @click="countUp">
+            <span class="button_top">Up</span>
+          </button>
+          <button @click="countDown">
+            <span class="button_top">Down</span>
+          </button>
+        </div>
+        <p>Total: {{ Number(store.product.cost * count).toLocaleString() }} 원</p>
+        <div class="button-container">
+          <a v-if="!userExist" class="button" @click="login">구매</a>
+          <a v-if="userExist" class="button" :href="buyUrl">구매</a>
+          <button class="button" @click="addToCart">장바구니</button>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +40,7 @@
 
 <script setup>
 import { useShopStore } from "@/stores/shop";
-import { onMounted, ref, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 import { useLoginStore } from "@/stores/login";
 
@@ -42,103 +51,117 @@ const product_id = ref(route.params.id);
 
 const store = useShopStore();
 const loginStore = useLoginStore();
-const userExist = computed(
-  () => loginStore.JustUserInfo && loginStore.JustUserInfo.email
-);
-
-onMounted(() => {
-  store.getShopDetail(product_id.value);
-})
+const userExist = computed(() => loginStore.JustUserInfo && loginStore.JustUserInfo.email);
 
 const count = ref(1);
 const countUp = () => {
   count.value++;
 };
 
-
-
 const countDown = () => {
-  if(count.value > 1)
-      count.value--;
+  if (count.value > 1) count.value--;
 };
 
-onMounted(async () => {
-await loginStore.getJustUserInfo();
+onMounted(() => {
+  store.getShopDetail(product_id.value);
 });
 
+onMounted(async () => {
+  await loginStore.getJustUserInfo();
+});
 
-
-// a 링크 형태로 발사 
-const login = function(){
-    window.alert("로그인이 필요한 서비스입니다.") ;
-    router.push("/login");
+const login = function() {
+  window.alert("로그인이 필요한 서비스입니다.");
+  router.push("/login");
 };
-
 
 const buyUrl = computed(() => {
   if (count.value > 0) {
-      return `http://localhost:8080/api/kakaopay/buy?partner_user_id=${encodeURIComponent(loginStore.JustUserInfo.email)}&item_name=${encodeURIComponent(store.product.item_name)}&quantity=${count.value}&total_amount=${store.product.cost}&tier=0`;
+    return `http://localhost:8080/api/kakaopay/buy?partner_user_id=${encodeURIComponent(loginStore.JustUserInfo.email)}&item_name=${encodeURIComponent(store.product.item_name)}&quantity=${count.value}&total_amount=${store.product.cost}&tier=0`;
   }
   return '#';
 });
+
+const addToCart = () => { //장바구니 기능
+  window.alert("장바구니에 추가되었습니다.");
+};
+
 </script>
 
 <style scoped>
+.product-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.category-selection {
+  margin-bottom: 20px;
+}
+
+.category-buttons {
+  margin-bottom: 20px;
+}
+
+.category-buttons button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #f2f2f2;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-buttons button.active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.category-buttons button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
 .product-details {
-max-width: 600px;
-margin: 0 auto;
-padding: 20px;
-border: 1px solid #ccc;
-border-radius: 5px;
-background-color: #f9f9f9;
+  display: flex;
+  gap: 20px;
 }
 
-.product-details h4 {
-margin: 10px 0;
-font-size: 18px;
-color: #333;
+.product-image {
+  flex: 2;
+  padding-right: 20px;
 }
 
-.product-details img {
-max-width: 100%;
-height: auto;
-margin-top: 10px;
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
 }
 
-.product-details p {
-margin: 10px 0;
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.product-details .buttons {
-margin-top: 20px;
+.product-info h4 {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #333;
 }
 
-.product-details .buttons button {
-padding: 10px 20px;
-background-color: #000000;
-color: #fff;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-margin-right: 10px;
+.product-info p {
+  margin: 10px 0;
 }
 
-.product-details .buttons a {
-display: inline-block;
-padding: 10px 20px;
-background-color: #000000;
-color: #fff;
-text-decoration: none;
-border-radius: 5px;
-transition: background-color 0.3s;
-}
-
-.product-details .buttons a:hover {
-background-color: #dd968b;
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 button {
-  /* Variables */
   --button_radius: 0.75em;
   --button_color: #e8e8e8;
   --button_outline_color: #000000;
@@ -162,19 +185,11 @@ button {
 }
 
 button:hover .button_top {
-  /* Pull the button upwards when hovered */
   transform: translateY(-0.33em);
 }
 
 button:active .button_top {
-  /* Push the button downwards when pressed */
   transform: translateY(0);
-}
-
-.button-container {
-  display: flex;
-  gap: 10px; /* 버튼과 링크 사이의 간격을 조정할 수 있습니다 */
-  align-items: center; /* 세로 중앙 정렬 */
 }
 
 .button {

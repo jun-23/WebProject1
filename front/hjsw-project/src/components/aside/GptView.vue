@@ -42,6 +42,7 @@ const chat = function () {
 </script>
 
 <style scoped>
+
 .chat-container {
   max-width: 600px;
   margin: 50px auto;
@@ -50,6 +51,8 @@ const chat = function () {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+  display: none;
+
 }
 
 h1 {

@@ -20,6 +20,7 @@ import Test from "@/components/Test.vue";
 import MyPagePostByMe from "@/components/MyPagePostByMe.vue";
 import DesciptTier from "@/components/DesciptTier.vue";
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,6 +29,7 @@ const router = createRouter({
       name: "tier",
       component: DesciptTier,
     },
+    ,
     {
       path: "/test",
       name: "test",
@@ -93,12 +95,12 @@ const router = createRouter({
       component: ShopView,
       children: [
         {
-          path: "",
+          path: ":category?",
           name: "shopList",
           component: ShopList,
         },
         {
-          path: ":id",
+          path: "detail/:id",
           name: "shopDetail",
           component: ShopDetail,
         },

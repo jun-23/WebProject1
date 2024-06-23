@@ -2,14 +2,7 @@
   <div class="container">
     <h1>마이페이지</h1>
     <hr>
-    <section>
-      <h2>My Grade</h2>
-      <div class="bronze" v-if="loginStore.grade===0"><img src="@/assets/tier/bronze-removebg-preview.png"><h3>Bronze</h3></div>
-      <div class="silver" v-if="loginStore.grade===1"> <img src="@/assets/tier/silver-removebg-preview.png"><h3>Silver</h3></div>
-      <div class="gold" v-if="loginStore.grade===2"><img src="@/assets/tier/gold-removebg-preview.png"><h3>Gold</h3></div>
-      <div class="platinum" v-if="loginStore.grade===3"> <img src="@/assets/tier/platinum-removebg-preview.png"><h3>Platinum</h3></div>
-    </section>
-    <hr>
+
     <section>
       <router-link :to="`/mypage/post`">
                   <h2>내가 쓴 글</h2>
@@ -69,29 +62,6 @@
         </tbody>
       </table>
     </section>
-
-    <section>
-      <h2>티어 상품</h2>
-      <hr />
-      <table class="cancelTable">
-        <thead>
-          <tr>
-            <th>주문번호</th>
-            <th>결제상품</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="order in store.orderList.filter((c) => c.flag === 2)" :key="order.id">
-            <td>
-              <div class="detailLink">
-                  {{ order.id }}번
-              </div>
-            </td>
-            <td>{{ order.item }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
     <hr />
   </div>
 </template>
@@ -116,14 +86,6 @@ onMounted(() => {});
 </script>
 
 <style scoped>
-
-/* 전체 페이지 스타일 */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
 .container {
   max-width: 800px;
   margin: 20px auto;
@@ -131,14 +93,19 @@ body {
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  
 }
 
-h2 {
+h1 {
   margin-top: 0;
+  text-align: center;
 }
 
-/* 주문 및 취소 테이블 스타일 */
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -146,65 +113,31 @@ table {
 }
 
 th, td {
-  padding: 10px;
-  text-align: left;
+  padding: 12px; /* Increased padding for better spacing */
+  text-align: center;
 }
 
 thead {
   background-color: #333;
-  color: black;
+  color: white;
 }
 
-tr:nth-child(even) {
+tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/* 링크 스타일 */
-a {
-  color:black;
+.detailLink {
+  display: flex;
+  justify-content: center;
+}
+
+.detailLink a {
+  color: #007bff; /* Link color */
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-a:hover {
-  text-decoration: underline;
+.detailLink a:hover {
+  color: #0056b3; /* Hover color */
 }
-
-.bronze {
-  color : brown;
-  font-size: 36px;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px gray;
-  display: flex;
-  align-items: center;
-}
-
-.silver {
-  color : gray;
-  font-size: 36px;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px gray;
-  display: flex;
-  align-items: center;
-}
-
-.gold {
-  color : #ffd700;
-  font-size: 36px;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px gray;
-  display: flex;
-  align-items: center;
-}
-
-.platinum {
-  color : palegreen;
-  font-size: 36px;
-  font-weight: bold;
-  text-shadow: 2px 2px 2px gray;
-  display: flex;
-  align-items: center;
-}
-
-
-
 </style>

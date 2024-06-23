@@ -1,137 +1,131 @@
 <template>
-  <div class="carousel-container">
-    <div class="navigation-buttons">
-      <button @click="prev" class="carousel-buttons">
-        <font-awesome-icon :icon="['fas', 'chevron-left']" />
-      </button>
-      &emsp;&emsp;&emsp;&emsp;
-      <span>PLATINUM</span>&emsp;&emsp;&emsp;&emsp;
-      <button @click="next" class="carousel-buttons">
-        <font-awesome-icon :icon="['fas', 'chevron-right']" />
-      </button>
+  <div>
+  <div id="cate_all">
+    <!-- 카테고리 영역 -->
+    <div id="category" class="xans-element- xans-layout xans-layout-category">
+      <div class="position">
+        <ul>
+          <!-- 카테고리 리스트 -->
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=111">NEW</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=66">STREAMER</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=101">컵</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=107">디지털</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=103">패션</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=108">데스크</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=140">인형</a>
+          </li>
+          <li class="xans-record-">
+            <a href="/product/list.html?cate_no=149">키링</a>
+          </li>
+        </ul>
+      </div>
     </div>
-    <Flicking
-      ref="flicking"
-      :options="{ align: 'prev', circular: true, panelsPerView: 3 }"
-      @move-end="onMoveEnd"
-    >
-      <div class="panel">
-        <router-link to="/">
-          <img src="@/assets/google.png" class="carousel-image" />
-        </router-link>
-      </div>
-      <div class="panel">
-        <router-link to="/">
-          <img src="@/assets/google.png" class="carousel-image" />
-        </router-link>
-      </div>
-      <div class="panel">
-        <router-link to="/">
-          <img src="@/assets/google.png" class="carousel-image" />
-        </router-link>
-      </div>
-      <div class="panel">
-        <router-link to="/">
-          <img src="@/assets/google.png" class="carousel-image" />
-        </router-link>
-      </div>
-      <div class="panel">
-        <img src="@/assets/ReadyAndRun_Logo.png" class="carousel-image" />
-      </div>
-      <div class="panel">
-        <img src="@/assets/naver.png" class="carousel-image" />
-      </div>
-      <div class="panel">
-        <img src="@/assets/kakao.png" class="carousel-image" />
-      </div>
-    </Flicking>
+  </div>
   </div>
 </template>
 
-<script setup>
-///// for FontAwesome
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { fas } from "@fortawesome/free-solid-svg-icons";
-
-library.add(fas);
-
-/////
-
-import { ref } from "vue";
-
-const flicking = ref(null);
-
-const prev = () => {
-  flicking.value.prev().catch(console.error);
-};
-
-const next = () => {
-  flicking.value.next().catch(console.error);
-};
-
-const onMoveEnd = (e) => {
-  console.log("Move end", e);
-};
+<script>
+// Vue 컴포넌트에 필요한 스크립트 추가 (현재는 빈 스크립트)
 </script>
 
+
+<script></script>
+
 <style scoped>
-.carousel-container {
-  width: 50%;
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
+/* 전체 카테고리 영역 스타일 */
+#cate_all {
+    height: 33px;
+    border-top: 1px solid #ececec;
+    border-bottom: 1px solid #ececec;
+    position: absolute;
+    width: 100%;
+    top: 140px;
+    padding: 19px 0 28px;
 }
 
-.panel {
-  width: 33.33%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  box-sizing: border-box;
+/* 기본 폰트 및 배경 스타일 */
+body, code {
+    font: 0.75em 'Open Sans', 'Nanum Gothic', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', 'AppleGothic', 'Apple SD Gothic Neo', sans-serif;
+    color: #111111;
+    background: #fff;
 }
 
-.carousel-image {
-  width: 100%;
-  height: auto;
-  width: auto;
-  min-height: 300px;
-  min-width: 200px;
-  max-height: 350px;
-  max-width: 250px;
-  object-fit: contain;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s;
+/* 기본 요소 스타일 리셋 */
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, img {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', 'Nanum Gothic', 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', 'AppleGothic', 'Apple SD Gothic Neo', sans-serif;
 }
 
-.carousel-image:hover {
-  transform: scale(1.05);
+/* div 기본 스타일 */
+div {
+    display: block;
+    unicode-bidi: isolate;
 }
 
-.navigation-buttons {
-  margin-top: 20px;
+/* 카테고리 레이아웃 스타일 */
+.xans-layout-category {
+    position: absolute;
+    min-width: 1200px;
+    margin: 0 0 10px;
+    width: 100%;
+    text-align: center;
+    clear: both;
+    background: #fff;
+    z-index: 1001;
 }
 
-.navigation-buttons span {
-  font-family: "Roboto", sans-serif;
-  font-size: 36px;
-  font-weight: bold;
+/* 카테고리 리스트 스타일 */
+.xans-layout-category .position {
+    text-align: center;
 }
 
-.carousel-buttons {
-  margin: 0 10px;
-  padding: 10px 20px;
-  font-size: 32px;
-  border: none;
-  border-radius: 10px;
-  color: rgb(0, 0, 0);
-  cursor: pointer;
-  transition: background-color 0.3s;
+.xans-layout-category .position > ul {
+    /* 추가 스타일 없음 */
 }
 
-.carousel-buttons:hover {
-  color: aqua;
+/* 카테고리 리스트 항목 스타일 */
+.xans-layout-category .position > ul > li {
+    position: relative;
+    display: inline-block;
+    z-index: 15;
+    list-style: none;
 }
+
+#cate_all a, #header a {
+    font-family: 'Raleway', 'Nanum Gothic';
+}
+
+/* 카테고리 링크 스타일 */
+.xans-layout-category .position > ul > li > a {
+    display: block;
+    font-size: 13px;
+    padding: 12px 14px 34px;
+    letter-spacing: 1px;
+    color: #000000;
+    word-spacing: -1px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* 앵커 기본 스타일 */
+a {
+    text-decoration: none;
+    color: #000;
+    transition: all 0.3s ease;
+}
+
 </style>
