@@ -12,20 +12,24 @@ import com.project1.oauth.repository.ProductRepository;
 
 @Service
 public class ShopService {
-	
+
 	@Autowired
 	private ProductRepository productRepository;
-	
-	public List<ProductDomain> getList(){
-		
+
+	public List<ProductDomain> getList() {
+
 		return productRepository.findAll();
 	}
-	
-public	ProductDomain getDetail(Integer id){
-		
-		return productRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("Invalid id"));
+
+	public List<ProductDomain> getListByCategory(String category2) {
+		return productRepository.findByCategory2(category2);
 	}
-	
+
+	public ProductDomain getDetail(Integer id) {
+
+		return productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid id"));
+	}
+
 	public void upload(MultipartFile img, Integer cost, String item_name) throws IOException {
 		ProductDomain product = new ProductDomain();
 		product.setImg(img.getBytes().toString());

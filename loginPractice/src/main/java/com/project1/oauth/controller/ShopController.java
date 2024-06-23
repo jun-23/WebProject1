@@ -3,6 +3,7 @@ package com.project1.oauth.controller;
 import java.io.IOException;
 import java.util.List;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,26 +37,31 @@ public class ShopController {
 		List<ProductDomain> list = shopservice.getList();
 		System.out.println(list);
 		return list;
-
 	}
-	
+
 	@Operation(summary = "상품 상세")
 	@GetMapping("/{id}")
 	public ProductDomain getProductList(@PathVariable("id") int id) {
 		return shopservice.getDetail(id);
-
 	}
-	
+
+	@Operation(summary = "카테고리별 상품 목록")
+	@GetMapping("/category/{category}")
+	public List<ProductDomain> getProductListByCategory(@PathVariable("category") String category) {
+		System.out.println(category);
+		List<ProductDomain> res = shopservice.getListByCategory(category);
+		System.out.println(res);
+		return res;
+	}
+
 	@Operation(summary = "상품 등록")
 	@PostMapping("/upload")
 	public String uploadImage(@RequestParam("file") MultipartFile file, @RequestParam("item_name") String item_name,
-			@RequestParam("cost") Integer cost) throws IOException {
-        // 파일 이름을 파라미터로 받아서 이미지 서비스로 전달
-        String fileName = file.getOriginalFilename();
-        shopservice.upload(file,cost, item_name);
+							  @RequestParam("cost") Integer cost) throws IOException {
+		// 파일 이름을 파라미터로 받아서 이미지 서비스로 전달
+		String fileName = file.getOriginalFilename();
+		shopservice.upload(file, cost, item_name);
 
-        return "image-test";
-
-    }
-
+		return "image-test";
+	}
 }

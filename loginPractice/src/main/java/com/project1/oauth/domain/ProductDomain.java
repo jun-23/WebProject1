@@ -15,12 +15,31 @@ public class ProductDomain {
 	@Column(name = "product_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer productId;
-	
+
 	private Integer cost;
-	
+
+	private String category; //롼련 IP
+
+	private String category2; //물품종류
 
 	private String item_name;
-	
+
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getCategory2() {
+		return category2;
+	}
+
+	public void setCategory2(String category2) {
+		this.category2 = category2;
+	}
 
 	private String img; //이미지 소스
 
@@ -66,3 +85,4 @@ public class ProductDomain {
 				+ hashCode() + ", toString()=" + super.toString() + "]";
 	}
 }
+as
